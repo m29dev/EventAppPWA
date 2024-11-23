@@ -1,11 +1,12 @@
 // src/pages/AuthPage.js
 import React, { useState } from 'react'
-import { auth } from '../firebase-config'
+import { auth } from '../firebaseConfig'
 import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
 } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 
 const AuthPage = () => {
     const [email, setEmail] = useState('')
@@ -18,9 +19,37 @@ const AuthPage = () => {
 
         try {
             if (isSignUp) {
-                await createUserWithEmailAndPassword(auth, email, password)
+                const user = await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                )
+                console.log(user)
+
+                const userObject = {
+                    id: user.user.uid,
+                    email: user.user.email,
+                    accessToken: user.user.accessToken,
+                    // avatar: dataUser.data[0].avatar,
+                }
+
+                localStorage.setItem('userInfo', JSON.stringify(userObject))
             } else {
-                await signInWithEmailAndPassword(auth, email, password)
+                const user = await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                )
+                console.log(user)
+
+                const userObject = {
+                    id: user.user.uid,
+                    email: user.user.email,
+                    accessToken: user.user.accessToken,
+                    // avatar: dataUser.data[0].avatar,
+                }
+
+                localStorage.setItem('userInfo', JSON.stringify(userObject))
             }
             navigate('/events')
         } catch (error) {
@@ -30,6 +59,8 @@ const AuthPage = () => {
 
     return (
         <div>
+            <Navbar />
+
             <h2>{isSignUp ? 'Sign Up' : 'Sign In'}</h2>
             <form onSubmit={handleAuth}>
                 <input
