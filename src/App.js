@@ -5,6 +5,7 @@ import AuthPage from './Pages/AuthPage'
 import UserPage from './Pages/UserPage'
 import EventsPage from './Pages/EventsPage'
 import EventsDetailPage from './Pages/EventsDetailPage'
+import EventsCreatePage from './Pages/EventsCreatePage'
 
 const App = () => {
     return (
@@ -15,6 +16,7 @@ const App = () => {
                 <Route path="/user" element={<UserPage />} />
                 <Route path="/events" element={<EventsPage />} />
                 <Route path="/events/:id" element={<EventsDetailPage />} />
+                <Route path="/create" element={<EventsCreatePage />} />
             </Routes>
         </Router>
     )
