@@ -44,21 +44,26 @@ const EventsPage = () => {
 
             <div style={styles.containerBox}>
                 {events.map((event) => (
-                    // <div
-                    //     key={event.id}
-                    //     onClick={() => navigate(`/events/${event.id}`)}
-                    // >
-                    //     <h4>{event.title}</h4>
-                    //     <p>{event.description}</p>
-                    // </div>
-
                     <div
                         style={styles.container}
                         key={event.id}
                         onClick={() => navigate(`/events/${event.id}`)}
                     >
-                        <h1 style={styles.title}>{event.title}</h1>
-                        <p style={styles.description}>{event.description}</p>
+                        <div style={styles.boxLeft}>
+                            <img
+                                src={`
+                                    https://xegmsphprxsopaotcvpj.supabase.co/storage/v1/object/public/events/${event?.image}
+                                    `}
+                                alt="Account Icon"
+                                style={styles.icon}
+                            />
+                        </div>
+                        <div style={styles.boxRight}>
+                            <h1 style={styles.title}>{event.title}</h1>
+                            <p style={styles.description}>
+                                {event.description}
+                            </p>
+                        </div>
                     </div>
                 ))}
             </div>
@@ -105,6 +110,8 @@ const styles = {
         boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
         margin: '20px 20px 0px 20px',
         overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'row',
     },
 
     title: {
@@ -121,6 +128,25 @@ const styles = {
         margin: '0px',
         overflow: 'hidden',
     },
+
+    boxLeft: {
+        height: '100px',
+        width: '100px',
+        overflow: 'hidden',
+        borderRadius: '11px',
+        border: '1px solid #ccc',
+    },
+
+    icon: {
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+    },
+
+    boxRight: {
+        marginLeft: '21px',
+    },
+    //
 }
 
 export default EventsPage

@@ -4,6 +4,9 @@ import { db, auth } from '../firebaseConfig'
 import { collection, addDoc, getDocs, orderBy } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import supabase from '../supabaseClient'
+import SearchableMap from '../components/SearchableMap'
+import Map from '../components/Map'
 
 const EventsCreatePage = () => {
     const [events, setEvents] = useState([])
@@ -31,12 +34,26 @@ const EventsCreatePage = () => {
             if (!title || !description) return
 
             // run img upload
+            // check if new image
+            console.log('saving the changes: ', avatar)
+
+            // Upload the image to Supabase Storage
+            const res = await supabase.storage
+                .from('events') // 'images' is your storage bucket name
+                .upload(`${Date.now()}.${avatarData.name}`, avatarData)
+
+            if (!res) return console.log('upload error')
+            if (res?.error) return console.log(res?.error)
+
+            const imageURI = res?.data?.path
+            console.log('UPLOADED AVATAR: ', imageURI)
 
             const event = await addDoc(collection(db, 'events'), {
                 title,
                 description,
                 createdAt: new Date(),
                 userId: auth.currentUser?.uid,
+                image: imageURI,
             })
             setTitle('')
             setDescription('')
@@ -52,6 +69,8 @@ const EventsCreatePage = () => {
     return (
         <div>
             <Navbar />
+
+            <Map />
 
             {auth.currentUser ? (
                 <div style={styles.box}>
