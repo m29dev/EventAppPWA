@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux' // Zakładając, że stan użytkownika jest w Reduxie
 import { useNavigate } from 'react-router-dom'
+import { auth } from '../firebaseConfig'
 
 const Navbar = () => {
-    const [user] = useSelector((state) => state.user) // Pobieramy stan z Redux
+    const { user } = useSelector((state) => state.user) // Pobieramy stan z Redux
 
     useEffect(() => {
         console.log(user)
@@ -12,35 +12,28 @@ const Navbar = () => {
 
     const navigate = useNavigate()
 
-    // const handleSignOut = () => {
-    //     if (onSignOut) onSignOut()
-    //     navigate('/auth') // Przekierowanie do strony logowania po wylogowaniu
-    // }
-
     const handleUserPage = () => {
-        console.log('userPage')
         navigate('/user')
     }
+
+    useEffect(() => {
+        console.log('FIREBASE AUTH: ', auth.currentUser)
+    }, [])
 
     return (
         <nav style={styles.navbar}>
             <div style={styles.logoContainer}>
-                <h1 style={styles.logo}>EventApp</h1>
+                <img style={styles.logo} src="./logo.png" alt="logo"></img>
+                {/* <h1 style={styles.logoText}>EV</h1> */}
             </div>
             <div style={styles.navItems}>
                 {!user ? (
                     <>
                         <button
                             style={styles.button}
-                            onClick={() => navigate('/auth/signin')}
+                            onClick={() => navigate('/auth')}
                         >
-                            Sign In
-                        </button>
-                        <button
-                            style={styles.button}
-                            onClick={() => navigate('/auth/signup')}
-                        >
-                            Sign Up
+                            Auth
                         </button>
                     </>
                 ) : (
@@ -57,6 +50,25 @@ const Navbar = () => {
 }
 
 const styles = {
+    logo: {
+        height: '30px',
+        width: '30px',
+        marginRight: '20px',
+    },
+
+    logoText: {
+        height: '40px',
+        width: '40px',
+        margin: '0px',
+        padding: '0px',
+        textAlign: 'center',
+        textJustify: 'center',
+        fontSize: '30px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
     navbar: {
         display: 'flex',
         justifyContent: 'space-between',
@@ -72,11 +84,7 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
     },
-    logo: {
-        margin: 0,
-        fontSize: '24px',
-        fontWeight: 'bold',
-    },
+
     navItems: {
         display: 'flex',
         alignItems: 'center',

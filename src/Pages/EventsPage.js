@@ -49,20 +49,28 @@ const EventsPage = () => {
                         key={event.id}
                         onClick={() => navigate(`/events/${event.id}`)}
                     >
-                        <div style={styles.boxLeft}>
-                            <img
-                                src={`
+                        <div style={styles.boxTop}>
+                            <h1 style={styles.title}>{event.title}</h1>
+                        </div>
+                        <div style={styles.boxBot}>
+                            <div style={styles.boxLeft}>
+                                <img
+                                    src={`
                                     https://xegmsphprxsopaotcvpj.supabase.co/storage/v1/object/public/events/${event?.image}
                                     `}
-                                alt="Account Icon"
-                                style={styles.icon}
-                            />
-                        </div>
-                        <div style={styles.boxRight}>
-                            <h1 style={styles.title}>{event.title}</h1>
-                            <p style={styles.description}>
-                                {event.description}
-                            </p>
+                                    alt="Account Icon"
+                                    style={styles.icon}
+                                />
+                            </div>
+                            <div style={styles.boxRight}>
+                                <p style={styles.description}>
+                                    {event.address}
+                                </p>
+
+                                <p style={styles.description}>
+                                    {event.date}, {event.time}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 ))}
@@ -111,6 +119,14 @@ const styles = {
         margin: '20px 20px 0px 20px',
         overflow: 'hidden',
         display: 'flex',
+        flexDirection: 'column',
+    },
+
+    boxTop: {
+        overflow: 'hidden',
+    },
+    boxBot: {
+        display: 'flex',
         flexDirection: 'row',
     },
 
@@ -132,6 +148,8 @@ const styles = {
     boxLeft: {
         height: '100px',
         width: '100px',
+        minHeight: '100px',
+        minWidth: '100px',
         overflow: 'hidden',
         borderRadius: '11px',
         border: '1px solid #ccc',
