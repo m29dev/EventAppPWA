@@ -1,16 +1,20 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUser } from '../redux/userSlice'
 
 const UserPage = () => {
     const { user } = useSelector((state) => state.user)
+    const dispatch = useDispatch()
 
     const navigate = useNavigate()
 
     const handleSignOut = () => {
         localStorage.removeItem('userInfo')
         navigate('/auth')
+
+        dispatch(setUser(null))
     }
 
     return (

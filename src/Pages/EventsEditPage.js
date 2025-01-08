@@ -1,59 +1,52 @@
 // src/pages/EventsPage.js
 import React, { useEffect, useState } from 'react'
 import { db, auth } from '../firebaseConfig'
-import { collection, addDoc } from 'firebase/firestore'
-import { useNavigate } from 'react-router-dom'
+import { collection, addDoc, getDoc, doc, updateDoc } from 'firebase/firestore'
+import { useNavigate, useParams } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import supabase from '../supabaseClient'
 import Map from '../components/Map'
 import { useSelector } from 'react-redux'
-import { overlay } from '@cloudinary/url-gen/qualifiers/blendMode'
-import { justify } from '@cloudinary/url-gen/qualifiers/textAlignment'
-import { hover } from '@testing-library/user-event/dist/hover'
 import DatePickerComponent from '../components/DatePickerComponent'
-import { color } from '@cloudinary/url-gen/qualifiers/background'
 
-const EventsCreatePage = () => {
-    const { eventInfo } = useSelector((state) => state.user)
+const EventsEditPage = () => {
+    const { eventInfo, user } = useSelector((state) => state.user)
+    const { id } = useParams()
 
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const navigate = useNavigate()
 
     const [avatar, setAvatar] = useState()
+    const [avatarOld, setAvatarOld] = useState()
     const [avatarData, setAvatarData] = useState()
-    const [displayError, setDisplayError] = useState()
 
     const handleAvatarChange = (event) => {
         if (!event.target.files[0]) return
-
-        console.log('AVATAR INFO: ', Date.now(), event.target.files[0])
 
         setAvatarData(event.target.files[0])
         const objectUrl = URL.createObjectURL(event.target.files[0])
         setAvatar(objectUrl)
     }
 
-    const handleCreateEvent = async (e) => {
+    const handleEditEvent = async (e) => {
         try {
             e.preventDefault()
+
+            if (!title || !description) return
 
             const eventInfo = localStorage.getItem('eventInfo')
                 ? JSON.parse(localStorage.getItem('eventInfo'))
                 : null
 
-            if (
-                !title ||
-                !description ||
-                !eventInfo?.address ||
-                !eventInfo?.date ||
-                !eventInfo?.time
-            )
-                return setDisplayError('Fill out all required data')
+            if (!eventInfo) return console.log('choose event place')
+            // run img upload
+            // check if new image
+
+            let imageURI
 
             // Upload the image to Supabase Storage
-            let imageURI
-            if (avatarData) {
+            if (avatar) {
                 const res = await supabase.storage
                     .from('events') // 'images' is your storage bucket name
                     .upload(`${Date.now()}.${avatarData.name}`, avatarData)
@@ -62,25 +55,30 @@ const EventsCreatePage = () => {
                 if (res?.error) return console.log(res?.error)
 
                 imageURI = res?.data?.path
-                console.log('UPLOADED AVATAR: ', imageURI)
+            } else {
+                imageURI = event?.image
             }
 
-            const eventUpload = await addDoc(collection(db, 'events'), {
+            const newObject = {
                 title,
                 description,
-                createdAt: new Date(),
+                createdAt: event?.createdAt,
+                updatedAt: new Date(),
                 userId: auth.currentUser?.uid,
-                image: imageURI ? imageURI : '',
+                image: imageURI,
                 location: { lat: eventInfo.lat, lng: eventInfo.lng },
                 address: eventInfo.address,
                 date: eventInfo.date,
                 time: eventInfo.time,
-            })
-            setTitle('')
-            setDescription('')
+            }
 
-            if (!eventUpload) return console.log('could not create event')
+            // Get a reference to the document
+            const docRef = doc(db, 'events', id)
 
+            // Update the document
+            await updateDoc(docRef, newObject)
+
+            console.log('Document updated successfully!')
             navigate('/events')
 
             localStorage.removeItem('eventInfo')
@@ -93,6 +91,41 @@ const EventsCreatePage = () => {
         console.log(eventInfo)
     }, [eventInfo])
 
+    const [event, setEvent] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+
+    useEffect(() => {
+        const fetchEvent = async () => {
+            try {
+                const eventDoc = doc(db, 'events', id)
+                const docSnap = await getDoc(eventDoc)
+
+                if (docSnap.exists()) {
+                    setEvent(docSnap.data())
+                    setTitle(docSnap.data().title)
+                    setDescription(docSnap.data().description)
+                    setAvatarOld(
+                        `
+                                    https://xegmsphprxsopaotcvpj.supabase.co/storage/v1/object/public/events/${
+                                        docSnap.data().image
+                                    }
+                                    `
+                    )
+                    console.log('EVENT: ', docSnap.data())
+                } else {
+                    setError('Event not found.')
+                }
+            } catch (error) {
+                setError('Error fetching event data.')
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchEvent()
+    }, [id])
+
     return (
         <div>
             <Navbar />
@@ -100,13 +133,9 @@ const EventsCreatePage = () => {
             <Map />
 
             <div style={styles.box}>
-                <h3>Create New Event</h3>
+                <h3>Edit Event</h3>
 
-                <form style={styles.formBox} onSubmit={handleCreateEvent}>
-                    {displayError && (
-                        <p style={styles.textError}>{displayError}</p>
-                    )}
-
+                <form style={styles.formBox} onSubmit={handleEditEvent}>
                     <input
                         style={styles.input}
                         type="text"
@@ -131,9 +160,9 @@ const EventsCreatePage = () => {
 
                     <div style={styles.avatarBox}>
                         <label for="upload">
-                            {avatar && (
+                            {(avatar || avatarOld) && (
                                 <img
-                                    src={avatar}
+                                    src={avatar ? avatar : avatarOld}
                                     alt="Account Icon"
                                     style={styles.icon}
                                 />
@@ -163,8 +192,8 @@ const EventsCreatePage = () => {
                 >
                     Cancel
                 </button>
-                <button style={styles.button} onClick={handleCreateEvent}>
-                    Create
+                <button style={styles.button} onClick={handleEditEvent}>
+                    Save
                 </button>
             </div>
         </div>
@@ -200,11 +229,6 @@ const styles = {
         margin: '20px 20px 50px 20px',
     },
 
-    textError: {
-        color: 'red',
-        textAlign: 'start',
-    },
-
     imgP: {
         textAlign: 'center',
     },
@@ -222,8 +246,6 @@ const styles = {
         border: '1px solid gray',
         marginBottom: '20px',
         padding: '10px',
-        maxHeight: '100px',
-        maxWidth: '1000px',
     },
 
     input: {
@@ -280,4 +302,4 @@ const styles = {
     },
 }
 
-export default EventsCreatePage
+export default EventsEditPage

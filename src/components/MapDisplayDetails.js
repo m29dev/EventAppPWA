@@ -17,7 +17,7 @@ const MapDisplayDetails = (data) => {
     return (
         <>
             <MapContainer
-                center={{ lat: 52.1437184, lng: 21.3057536 }}
+                center={{ lat: data.data.lat, lng: data.data.lng }}
                 zoom={13}
                 style={{ height: '300px', width: '100%' }}
             >

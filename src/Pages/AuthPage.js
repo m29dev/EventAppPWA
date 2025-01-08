@@ -7,9 +7,12 @@ import {
 } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import { setUser } from '../redux/userSlice'
+import { useDispatch } from 'react-redux'
 
 const AuthPage = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -69,12 +72,19 @@ const AuthPage = () => {
                     accessToken: user.user.accessToken,
                 }
 
+                dispatch(setUser(userObject))
                 localStorage.setItem('userInfo', JSON.stringify(userObject))
             }
 
             navigate('/events')
         } catch (error) {
-            alert(error.message)
+            if (signIn) {
+                setError('Wrong email or password')
+            } else {
+                setError(
+                    'check email address or / and password length (at least 6 characters)'
+                )
+            }
         }
     }
 

@@ -5,6 +5,8 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
+// import * as serviceWorker from './service-worker'
+import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
@@ -15,23 +17,36 @@ root.render(
     </React.StrictMode>
 )
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker
-            .register('/service-worker.js')
-            .then((registration) => {
-                console.log(
-                    'Service Worker registered with scope:',
-                    registration.scope
-                )
-            })
-            .catch((error) => {
-                console.log('Service Worker registration failed:', error)
-            })
-    })
-}
+serviceWorkerRegistration.register()
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', () => {
+//         navigator.serviceWorker
+//             .register('/service-worker.js')
+//             .then((registration) => {
+//                 console.log(
+//                     'Service Worker registered with scope:',
+//                     registration.scope
+//                 )
+//             })
+//             .catch((error) => {
+//                 console.log('Service Worker registration failed:', error)
+//             })
+//     })
+// }
+
+// if ('serviceWorker' in navigator) {
+//     navigator.serviceWorker
+//         .register('/service-worker.js')
+//         .then((registration) => {
+//             console.log(
+//                 'Service Worker registered with scope:',
+//                 registration.scope
+//             )
+//         })
+//         .catch((error) => {
+//             console.error('Service Worker registration failed:', error)
+//         })
+// }
+
 reportWebVitals()

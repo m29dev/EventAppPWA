@@ -1,13 +1,17 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux' // Zakładając, że stan użytkownika jest w Reduxie
 import { useNavigate } from 'react-router-dom'
 import { auth } from '../firebaseConfig'
 
 const Navbar = () => {
     const { user } = useSelector((state) => state.user) // Pobieramy stan z Redux
+    const [isAuth, setIsAuth] = useState(false)
 
     useEffect(() => {
         console.log(user)
+        if (user) {
+            setIsAuth(true)
+        }
     }, [user])
 
     const navigate = useNavigate()
@@ -16,24 +20,20 @@ const Navbar = () => {
         navigate('/user')
     }
 
-    useEffect(() => {
-        console.log('FIREBASE AUTH: ', auth.currentUser)
-    }, [])
-
     return (
         <nav style={styles.navbar}>
-            <div style={styles.logoContainer}>
+            <div style={styles.logoContainer} onClick={() => navigate('/')}>
                 <img style={styles.logo} src="./logo.png" alt="logo"></img>
-                {/* <h1 style={styles.logoText}>EV</h1> */}
+                <p style={styles.logoText}>evento</p>
             </div>
             <div style={styles.navItems}>
-                {!user ? (
+                {!isAuth ? (
                     <>
                         <button
                             style={styles.button}
                             onClick={() => navigate('/auth')}
                         >
-                            Auth
+                            Sign In
                         </button>
                     </>
                 ) : (
@@ -41,7 +41,9 @@ const Navbar = () => {
                         style={styles.avatarContainer}
                         onClick={handleUserPage}
                     >
-                        <div style={styles.avatar}>{1}</div>
+                        <div style={styles.avatar}>
+                            {user.email.slice(0, 1).toUpperCase()}
+                        </div>
                     </div>
                 )}
             </div>
@@ -50,6 +52,22 @@ const Navbar = () => {
 }
 
 const styles = {
+    button: {
+        // padding: '3px 24px', // Space around the text
+        fontSize: '16px', // Text size
+        height: '40px',
+        width: '80px',
+        fontWeight: '500', // Medium weight for clean look
+        borderRadius: '30px', // Fully rounded corners
+        border: '2px solid transparent', // Transparent border for subtle hover effect
+        backgroundColor: '#333330', // Green color (feel free to change)
+        color: 'white', // Text color
+        cursor: 'pointer', // Pointer cursor on hover
+        outline: 'none', // Remove the default focus outline
+        transition: 'all 0.3s ease', // Smooth transition for hover effects
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Subtle shadow for 3D effect
+    },
+
     logo: {
         height: '30px',
         width: '30px',
@@ -58,7 +76,6 @@ const styles = {
 
     logoText: {
         height: '40px',
-        width: '40px',
         margin: '0px',
         padding: '0px',
         textAlign: 'center',
@@ -79,26 +96,28 @@ const styles = {
         position: 'sticky',
         top: 0,
         zIndex: 1000,
+        borderRadius: '0px 0px 23px 23px',
     },
     logoContainer: {
         display: 'flex',
         alignItems: 'center',
+        cursor: 'pointer',
     },
 
     navItems: {
         display: 'flex',
         alignItems: 'center',
     },
-    button: {
-        backgroundColor: '#007bff',
-        color: 'white',
-        border: 'none',
-        borderRadius: '5px',
-        padding: '8px 16px',
-        marginLeft: '10px',
-        cursor: 'pointer',
-        fontSize: '14px',
-    },
+    // button: {
+    //     backgroundColor: '#007bff',
+    //     color: 'white',
+    //     border: 'none',
+    //     borderRadius: '5px',
+    //     padding: '8px 16px',
+    //     marginLeft: '10px',
+    //     cursor: 'pointer',
+    //     fontSize: '14px',
+    // },
     avatarContainer: {
         display: 'flex',
         alignItems: 'center',

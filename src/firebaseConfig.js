@@ -7,6 +7,7 @@ import {
     deleteDoc,
     orderBy,
     query,
+    updateDoc,
 } from 'firebase/firestore'
 
 const firebaseConfig = {
@@ -24,4 +25,4 @@ const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 const db = getFirestore(app)
 
-export { db, auth, doc, getDoc, deleteDoc, orderBy, query }
+export { db, auth, doc, getDoc, deleteDoc, orderBy, query, updateDoc }

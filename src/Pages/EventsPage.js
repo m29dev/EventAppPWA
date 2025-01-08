@@ -1,14 +1,14 @@
 // src/pages/EventsPage.js
 import React, { useState, useEffect } from 'react'
-import { db, auth } from '../firebaseConfig'
-import { collection, addDoc, getDocs, orderBy } from 'firebase/firestore'
+import { db } from '../firebaseConfig'
+import { collection, getDocs, orderBy } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import { useSelector } from 'react-redux'
 
 const EventsPage = () => {
+    const { user } = useSelector((state) => state.user)
     const [events, setEvents] = useState([])
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
     const navigate = useNavigate()
 
     const fetchEvents = async () => {
@@ -36,7 +36,11 @@ const EventsPage = () => {
                 <h3 style={styles.text}>Upcoming Events</h3>
                 <button
                     style={styles.button}
-                    onClick={() => navigate('/create')}
+                    onClick={() =>
+                        user
+                            ? navigate('/create')
+                            : alert('Sign In to create an event.')
+                    }
                 >
                     Create
                 </button>
@@ -112,7 +116,7 @@ const styles = {
 
     container: {
         padding: '20px',
-        maxWidth: '600px',
+        maxWidth: '1000px',
         backgroundColor: '#fff',
         borderRadius: '12px',
         boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',

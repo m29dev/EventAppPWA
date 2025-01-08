@@ -2,18 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { db, doc, getDoc, deleteDoc } from '../firebaseConfig' // Ensure this is your Firebase setup
 import { getAuth } from 'firebase/auth'
-import { Modal } from 'react-bootstrap' // You can use a modal library for confirmation
 import MapDisplayDetails from '../components/MapDisplayDetails'
 import Navbar from '../components/Navbar'
-import { position } from '@cloudinary/url-gen/qualifiers/timeline'
+import { useSelector } from 'react-redux'
 
 const EventsDetailPage = () => {
     const { id } = useParams() // Get the event ID from the URL
+    const { user } = useSelector((state) => state.user)
     const [event, setEvent] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [showModal, setShowModal] = useState(false)
-    const [deleteError, setDeleteError] = useState(false)
     // const history = useHistory()
     const navigate = useNavigate()
     const auth = getAuth() // Firebase Auth to access current user's UID
@@ -26,6 +24,7 @@ const EventsDetailPage = () => {
 
                 if (docSnap.exists()) {
                     setEvent(docSnap.data())
+                    console.log('EVENT: ', docSnap.data())
                 } else {
                     setError('Event not found.')
                 }
@@ -41,16 +40,16 @@ const EventsDetailPage = () => {
 
     const handleDeleteEvent = async () => {
         try {
-            if (event.user_uid !== auth.currentUser?.uid) {
+            if (event.userId !== user?.id) {
                 alert('You are not authorized to delete this event')
                 return
             }
 
             await deleteDoc(doc(db, 'events', id))
-            alert('Event deleted successfully!')
-            navigate.push('/') // Redirect to home after deletion
+            console.log('Event deleted successfully!')
+            navigate('/events')
         } catch (error) {
-            setDeleteError(true)
+            console.log(error)
         }
     }
 
@@ -81,15 +80,58 @@ const EventsDetailPage = () => {
             </div>
 
             <MapDisplayDetails data={event.location} />
+
+            {event.userId === user?.id && (
+                <div style={styles.controlPanel}>
+                    <button
+                        style={styles.button}
+                        onClick={() => navigate(`/events/${id}/edit`)}
+                    >
+                        Edit
+                    </button>
+                    <button style={styles.button} onClick={handleDeleteEvent}>
+                        Delete
+                    </button>
+                </div>
+            )}
         </div>
     )
 }
 
 // Styling for the Event Details Page
 const styles = {
+    button: {
+        // padding: '3px 24px', // Space around the text
+        fontSize: '16px', // Text size
+        height: '40px',
+        // width: '80px',
+        padding: '0px 10px 0px 10px',
+        fontWeight: '500', // Medium weight for clean look
+        borderRadius: '30px', // Fully rounded corners
+        border: '2px solid transparent', // Transparent border for subtle hover effect
+        backgroundColor: '#333330', // Green color (feel free to change)
+        color: 'white', // Text color
+        cursor: 'pointer', // Pointer cursor on hover
+        outline: 'none', // Remove the default focus outline
+        transition: 'all 0.3s ease', // Smooth transition for hover effects
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Subtle shadow for 3D effect
+    },
+    controlPanel: {
+        flex: 1,
+        height: '50px',
+        borderRadius: '50px',
+        backgroundColor: '#333330',
+        display: 'flex',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        margin: '20px 20px 50px 20px',
+    },
+
     icon: {
         height: '200px',
         width: '200px',
+        borderRadius: '24px',
+        overflow: 'hidden',
     },
     container: {
         padding: '20px',
@@ -126,6 +168,7 @@ const styles = {
         fontWeight: 'bold',
         textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
         margin: '0',
+        overflowWrap: 'break-word',
     },
     subtitle: {
         fontSize: '16px',
