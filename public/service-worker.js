@@ -7,6 +7,7 @@ const STATIC_ASSETS = [
     '/static/js/main.js',
     '/static/js/main.chunk.js',
     '/static/js/0.chunk.js',
+    'static/js/*',
     '/static/css/main.chunk.css',
     '/manifest.json',
     '/favicon.ico',
@@ -18,37 +19,27 @@ const STATIC_ASSETS = [
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
+            console.log('Caching assets...')
             return cache.addAll(STATIC_ASSETS)
         })
     )
 })
 
-// fetch sw offline-first
+// fetch sw
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
-            return (
-                cachedResponse ||
-                fetch(event.request).catch(() => {
-                    return caches.match('/index.html') // Fallback for SPA
-                })
-            )
-        })
-    )
-})
+            if (cachedResponse) {
+                console.log(cachedResponse)
+                return cachedResponse
+            }
 
-// update sw
-self.addEventListener('activate', (event) => {
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cache) => {
-                    if (cache !== CACHE_NAME) {
-                        return caches.delete(cache)
-                    }
-                    return console.log('updated')
-                })
-            )
+            return fetch(event.request).catch(() => {
+                if (event.request.url.endsWith('.js')) {
+                    return caches.match('/index.html')
+                }
+                return caches.match('/index.html') // Fallback for SPA
+            })
         })
     )
 })
