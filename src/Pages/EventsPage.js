@@ -21,6 +21,7 @@ const EventsPage = () => {
             ...doc.data(),
         }))
         console.log(eventsData)
+        console.log(4)
         setEvents(eventsData)
     }
 
@@ -34,6 +35,7 @@ const EventsPage = () => {
 
             <div style={styles.navBox}>
                 <h3 style={styles.text}>Upcoming Events</h3>
+
                 <button
                     style={styles.button}
                     onClick={() =>

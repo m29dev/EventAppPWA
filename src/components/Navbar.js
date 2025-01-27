@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux' // Zakładając, że stan użytkownika jest w Reduxie
 import { useNavigate } from 'react-router-dom'
-import { auth } from '../firebaseConfig'
 
 const Navbar = () => {
     const { user } = useSelector((state) => state.user) // Pobieramy stan z Redux
@@ -42,7 +41,7 @@ const Navbar = () => {
                         onClick={handleUserPage}
                     >
                         <div style={styles.avatar}>
-                            {user.email.slice(0, 1).toUpperCase()}
+                            {user?.email?.slice(0, 1)?.toUpperCase()}
                         </div>
                     </div>
                 )}

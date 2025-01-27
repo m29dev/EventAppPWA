@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import HomePage from './Pages/HomePage'
 import AuthPage from './Pages/AuthPage'
 import UserPage from './Pages/UserPage'
@@ -7,6 +6,7 @@ import EventsPage from './Pages/EventsPage'
 import EventsDetailPage from './Pages/EventsDetailPage'
 import EventsCreatePage from './Pages/EventsCreatePage'
 import EventsEditPage from './Pages/EventsEditPage'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 const App = () => {
     useEffect(() => {

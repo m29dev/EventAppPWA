@@ -31,10 +31,13 @@ const userSlice = createSlice({
             state.user = action.payload
             localStorage.setItem('userInfo', JSON.stringify(action.payload))
         },
-
         getUser(state, action) {
             const user = state
             return user
+        },
+        clearUser(state, action) {
+            state.user = null
+            localStorage.removeItem('userInfo')
         },
     },
 })
@@ -45,5 +48,6 @@ export const {
     updateEventTimeInfo,
     setUser,
     getUser,
+    clearUser,
 } = userSlice.actions
 export default userSlice.reducer
