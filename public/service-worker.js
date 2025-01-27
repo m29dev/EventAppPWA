@@ -46,6 +46,7 @@ self.addEventListener('activate', (event) => {
                     if (cache !== CACHE_NAME) {
                         return caches.delete(cache)
                     }
+                    return console.log('updated')
                 })
             )
         })
