@@ -1,34 +1,25 @@
 {
-    "short_name": "Ev",
-    "name": "Evento",
+    "short_name": "evento",
+    "name": "evento",
     "icons": [
         {
-            "src": "manifest-icon-192.maskable.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any"
+            "src": "favicon.ico",
+            "sizes": "64x64 32x32 24x24 16x16",
+            "type": "image/x-icon"
         },
         {
-            "src": "manifest-icon-192.maskable.png",
-            "sizes": "192x192",
+            "src": "favicon.ico",
             "type": "image/png",
-            "purpose": "maskable"
+            "sizes": "192x192"
         },
         {
-            "src": "manifest-icon-512.maskable.png",
-            "sizes": "512x512",
+            "src": "favicon.ico",
             "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "manifest-icon-512.maskable.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "maskable"
+            "sizes": "512x512"
         }
     ],
     "start_url": ".",
-    "background_color": "#333",
+    "background_color": "#333330",
     "display": "standalone",
-    "theme_color": "#333"
+    "theme_color": "#333330"
 }

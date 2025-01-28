@@ -53,18 +53,18 @@ const Navbar = () => {
 const styles = {
     button: {
         // padding: '3px 24px', // Space around the text
-        fontSize: '16px', // Text size
+        fontSize: '16px',
         height: '40px',
         width: '80px',
-        fontWeight: '500', // Medium weight for clean look
-        borderRadius: '30px', // Fully rounded corners
-        border: '2px solid transparent', // Transparent border for subtle hover effect
-        backgroundColor: '#333330', // Green color (feel free to change)
-        color: 'white', // Text color
-        cursor: 'pointer', // Pointer cursor on hover
-        outline: 'none', // Remove the default focus outline
-        transition: 'all 0.3s ease', // Smooth transition for hover effects
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Subtle shadow for 3D effect
+        fontWeight: '500',
+        borderRadius: '30px',
+        border: '2px solid transparent',
+        backgroundColor: '#333330',
+        color: 'white',
+        cursor: 'pointer',
+        outline: 'none',
+        transition: 'all 0.3s ease',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     },
 
     logo: {
