@@ -1,6 +1,6 @@
-# Evento
+# evento
 
-Evento is a Progressive Web Application (PWA) for events nearby.
+evento is a Progressive Web Application (PWA) for events nearby.
 
 ## 🚀 Features
 
