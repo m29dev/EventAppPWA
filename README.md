@@ -23,4 +23,21 @@ To test the application on **Netlify** go to the link below:
 
 [[eventoapp1](https://eventoapp1.netlify.app/)](https://eventoapp1.netlify.app/)
 
+## ⚡ Installation and Setup
+
+Clone the repository:
+
+git clone https://github.com/m29dev/EventAppPWA.git
+cd EventAppPWA
+
+Install dependencies:
+
+npm install
+
+Run the application locally:
+
+npm start
+
+The application will be available at http://localhost:3000.
+
 **Author:** [m29dev](https://github.com/m29dev)
