@@ -40,4 +40,6 @@ npm start
 
 The application will be available at http://localhost:3000.
 
-**Author:** [m29dev](https://github.com/m29dev)
+## Author
+
+[m29dev](https://github.com/m29dev)
