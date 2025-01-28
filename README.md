@@ -1,6 +1,6 @@
-# EventApp PWA
+# Evento
 
-EventApp is a Progressive Web Application (PWA) for events nearby.
+Evento is a Progressive Web Application (PWA) for events nearby.
 
 ## 🚀 Features
 
