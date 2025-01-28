@@ -21,6 +21,6 @@ evento is a Progressive Web Application (PWA) for events nearby.
 
 To test the application on **Netlify** go to the link below:
 
-[eventoapp1](https://eventoapp1.netlify.app/).
+[[eventoapp1](https://eventoapp1.netlify.app/)](https://eventoapp1.netlify.app/)
 
 **Author:** [m29dev](https://github.com/m29dev)
