@@ -2,13 +2,13 @@
 
 evento is a Progressive Web Application (PWA) for events nearby.
 
-## 🚀 Features
+## Features
 
 - Create an account and add your events.
 - Browse events created by other users.
 - Installable for mobile devices as a PWA.
 
-## 📦 Technologies
+## Technologies
 
 - **React.js** (frontend)
 - **React Router** (navigation)
@@ -17,13 +17,13 @@ evento is a Progressive Web Application (PWA) for events nearby.
 - **Service Worker** (offline/PWA support)
 - **Netlify** (hosting)
 
-## 🚀 Deployed on Netlify
+## Deployed on Netlify
 
 To test the application on **Netlify** go to the link below:
 
 [[eventoapp1](https://eventoapp1.netlify.app/)](https://eventoapp1.netlify.app/)
 
-## ⚡ Installation and Setup
+## Installation and Setup
 
 Clone the repository:
 
