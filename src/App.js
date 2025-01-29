@@ -1,23 +1,37 @@
 import React, { useEffect } from 'react'
-import HomePage from './Pages/HomePage'
-import AuthPage from './Pages/AuthPage'
-import UserPage from './Pages/UserPage'
-import EventsPage from './Pages/EventsPage'
-import EventsDetailPage from './Pages/EventsDetailPage'
-import EventsCreatePage from './Pages/EventsCreatePage'
-import EventsEditPage from './Pages/EventsEditPage'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
+
+import AppRoutes from './AppRoutes'
+
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+import './App.css'
 
 const App = () => {
+    const showToast = (value) => {
+        toast.success(value, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: 'light',
+        })
+    }
+
     useEffect(() => {
         // Handler for online event
         const handleOnline = () => {
-            alert('You are now back online!')
+            showToast('You are now back online!')
         }
 
         // Handler for offline event
         const handleOffline = () => {
-            alert('You are now offline. Please check your internet connection.')
+            showToast(
+                'You are now offline. Please check your internet connection.'
+            )
         }
 
         // Add event listeners for online/offline status
@@ -32,17 +46,13 @@ const App = () => {
     }, [])
 
     return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/auth" element={<AuthPage />} />
-                <Route path="/user" element={<UserPage />} />
-                <Route path="/events" element={<EventsPage />} />
-                <Route path="/events/:id" element={<EventsDetailPage />} />
-                <Route path="/events/:id/edit" element={<EventsEditPage />} />
-                <Route path="/create" element={<EventsCreatePage />} />
-            </Routes>
-        </Router>
+        <>
+            <Router>
+                <AppRoutes />
+            </Router>
+
+            <ToastContainer />
+        </>
     )
 }
 

@@ -1,14 +1,18 @@
-// src/pages/AuthPage.js
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import Navbar from '../components/Navbar'
+
+import { setUser } from '../redux/userSlice'
+import { useDispatch } from 'react-redux'
+
 import { auth } from '../firebaseConfig'
 import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
 } from 'firebase/auth'
-import { useNavigate } from 'react-router-dom'
-import Navbar from '../components/Navbar'
-import { setUser } from '../redux/userSlice'
-import { useDispatch } from 'react-redux'
+
+import './styles/authPageStyles.css'
 
 const AuthPage = () => {
     const navigate = useNavigate()
@@ -31,23 +35,32 @@ const AuthPage = () => {
     const handleAuth = async (e) => {
         e.preventDefault()
 
-        console.log('HANDLE AUTH: ', email, password)
-
         try {
+            // validate if email / password is not null
             if (!email || !password) {
-                setError('Please fill in all fields.')
-                return
+                return setError('Please fill in all fields.')
+            }
+
+            // validate email pattern
+            const emailPattern =
+                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+            if (!email || !emailPattern.test(email)) {
+                return setError('Please enter a valid email address')
             }
 
             if (!signIn) {
-                console.log('SIGN UP')
+                // validate password length
+                if (password.length < 6) {
+                    return setError(
+                        'Password must be at least 6 characters length'
+                    )
+                }
 
                 const user = await createUserWithEmailAndPassword(
                     auth,
                     email,
                     password
                 )
-                console.log(user)
 
                 const userObject = {
                     id: user.user.uid,
@@ -55,16 +68,14 @@ const AuthPage = () => {
                     accessToken: user.user.accessToken,
                 }
 
-                localStorage.setItem('userInfo', JSON.stringify(userObject))
+                // set state
+                dispatch(setUser(userObject))
             } else {
-                console.log('SIGN IN')
-
                 const user = await signInWithEmailAndPassword(
                     auth,
                     email,
                     password
                 )
-                console.log(user)
 
                 const userObject = {
                     id: user.user.uid,
@@ -72,8 +83,8 @@ const AuthPage = () => {
                     accessToken: user.user.accessToken,
                 }
 
+                // set state
                 dispatch(setUser(userObject))
-                localStorage.setItem('userInfo', JSON.stringify(userObject))
             }
 
             navigate('/events')
@@ -81,9 +92,7 @@ const AuthPage = () => {
             if (signIn) {
                 setError('Wrong email or password')
             } else {
-                setError(
-                    'check email address or / and password length (at least 6 characters)'
-                )
+                setError('Could not create an account, try again later')
             }
         }
     }
@@ -92,45 +101,53 @@ const AuthPage = () => {
         <div>
             <Navbar />
 
-            <div style={styles.container}>
+            <div className="th_container">
                 {signIn ? <h1>Sign In</h1> : <h1>Create an account</h1>}
 
-                {error && <p style={styles.error}>{error}</p>}
+                {error && <p className="th_error">{error}</p>}
 
-                <div style={styles.inputContainer}>
-                    <label style={styles.label}>Email:</label>
+                <div className="th_inputContainer">
+                    <label htmlFor="email" className="th_label">
+                        Email:
+                    </label>
                     <input
+                        id="email"
                         type="text"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        style={styles.input}
+                        className="th_input"
                         required
                     />
                 </div>
-                <div style={styles.inputContainer}>
-                    <label style={styles.label}>Password:</label>
+                <div className="th_inputContainer">
+                    <label htmlFor="password" className="th_label">
+                        Password:
+                    </label>
                     <input
+                        id="password"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        style={styles.input}
+                        className="th_input"
                         required
                     />
                 </div>
 
                 {signIn && (
-                    <div style={styles.btnBox}>
+                    <div className="th_btnBox">
                         <button
+                            id="button_submit"
                             type="submit"
                             onClick={handleAuth}
-                            style={styles.button}
+                            className="th_button"
                         >
                             Sign In
                         </button>
 
                         <button
+                            id="button_switch"
                             onClick={switchAuth}
-                            style={styles.buttonSecond}
+                            className="th_buttonSecond"
                         >
                             Don't have an account yet?
                         </button>
@@ -138,18 +155,20 @@ const AuthPage = () => {
                 )}
 
                 {!signIn && (
-                    <div style={styles.btnBox}>
+                    <div className="th_btnBox">
                         <button
+                            id="button_submit"
                             type="submit"
                             onClick={handleAuth}
-                            style={styles.button}
+                            className="th_button"
                         >
                             Sign Up
                         </button>
 
                         <button
+                            id="button_switch"
                             onClick={switchAuth}
-                            style={styles.buttonSecond}
+                            className="th_buttonSecond"
                         >
                             have an account already?
                         </button>
@@ -158,56 +177,6 @@ const AuthPage = () => {
             </div>
         </div>
     )
-}
-
-const styles = {
-    container: {
-        padding: '40px',
-        // backgroundColor: '#f4f4f9',
-        // border: '1px solid #ccc',
-        borderRadius: '5px',
-        marginTop: '40px',
-        margin: 'auto',
-        height: '100%',
-    },
-    inputContainer: {
-        marginBottom: '15px',
-    },
-    label: {
-        display: 'block',
-        marginBottom: '5px',
-    },
-    input: {
-        width: '100%',
-        height: '30px',
-        borderRadius: '5px',
-        border: '1px solid #ccc',
-    },
-    btnBox: {
-        display: 'flex',
-        justifyContent: 'space-between',
-    },
-    button: {
-        padding: '10px 15px',
-        backgroundColor: '#007BFF',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '5px',
-        cursor: 'pointer',
-        transition: 'background-color 0.3s',
-    },
-    buttonSecond: {
-        padding: '10px 15px',
-        backgroundColor: '#777777',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '5px',
-        cursor: 'pointer',
-        transition: 'background-color 0.3s',
-    },
-    error: {
-        color: 'red',
-    },
 }
 
 export default AuthPage

@@ -1,53 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit'
+import {
+    clearUserInfo,
+    getUserInfo,
+    setUserInfo,
+} from '../services/localStorageUserService'
 
 const initialState = {
-    user: localStorage.getItem('userInfo')
-        ? JSON.parse(localStorage.getItem('userInfo'))
-        : null,
-
-    eventInfo: localStorage.getItem('eventInfo')
-        ? JSON.parse(localStorage.getItem('eventInfo'))
-        : null,
+    user: getUserInfo(),
 }
 
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setEventInfo: (state, action) => {
-            state.eventInfo = action.payload
-            localStorage.setItem('eventInfo', JSON.stringify(action.payload))
-        },
-        updateEventDateInfo: (state, action) => {
-            state.eventInfo.date = action.payload.date
-            localStorage.setItem('eventInfo', JSON.stringify(state.eventInfo))
-        },
-        updateEventTimeInfo: (state, action) => {
-            state.eventInfo.time = action.payload.time
-            localStorage.setItem('eventInfo', JSON.stringify(state.eventInfo))
-        },
-
         setUser: (state, action) => {
             state.user = action.payload
-            localStorage.setItem('userInfo', JSON.stringify(action.payload))
-        },
-        getUser(state, action) {
-            const user = state
-            return user
+            setUserInfo(action.payload)
         },
         clearUser(state, action) {
             state.user = null
-            localStorage.removeItem('userInfo')
+            clearUserInfo()
         },
     },
 })
 
-export const {
-    setEventInfo,
-    updateEventDateInfo,
-    updateEventTimeInfo,
-    setUser,
-    getUser,
-    clearUser,
-} = userSlice.actions
+export const { setUser, clearUser } = userSlice.actions
 export default userSlice.reducer

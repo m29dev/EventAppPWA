@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux' // Zakładając, że stan użytkownika jest w Reduxie
+
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
+import './styles/navbarStyles.css'
+
 const Navbar = () => {
-    const { user } = useSelector((state) => state.user) // Pobieramy stan z Redux
+    const { user } = useSelector((state) => state.user)
     const [isAuth, setIsAuth] = useState(false)
 
     useEffect(() => {
-        console.log(user)
         if (user) {
             setIsAuth(true)
         }
@@ -20,27 +22,24 @@ const Navbar = () => {
     }
 
     return (
-        <nav style={styles.navbar}>
-            <div style={styles.logoContainer} onClick={() => navigate('/')}>
-                <img style={styles.logo} src="./logo.png" alt="logo"></img>
-                <p style={styles.logoText}>evento</p>
+        <nav className="navbar">
+            <div className="logoContainer" onClick={() => navigate('/')}>
+                <img className="logo" src="./logo.png" alt="logo"></img>
+                <p className="logoText">evento</p>
             </div>
-            <div style={styles.navItems}>
+            <div className="navItems">
                 {!isAuth ? (
                     <>
                         <button
-                            style={styles.button}
+                            className="button"
                             onClick={() => navigate('/auth')}
                         >
                             Sign In
                         </button>
                     </>
                 ) : (
-                    <div
-                        style={styles.avatarContainer}
-                        onClick={handleUserPage}
-                    >
-                        <div style={styles.avatar}>
+                    <div className="avatarContainer" onClick={handleUserPage}>
+                        <div className="avatar">
                             {user?.email?.slice(0, 1)?.toUpperCase()}
                         </div>
                     </div>
@@ -48,95 +47,6 @@ const Navbar = () => {
             </div>
         </nav>
     )
-}
-
-const styles = {
-    button: {
-        // padding: '3px 24px', // Space around the text
-        fontSize: '16px',
-        height: '40px',
-        width: '80px',
-        fontWeight: '500',
-        borderRadius: '30px',
-        border: '2px solid transparent',
-        backgroundColor: '#333330',
-        color: 'white',
-        cursor: 'pointer',
-        outline: 'none',
-        transition: 'all 0.3s ease',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    },
-
-    logo: {
-        height: '30px',
-        width: '30px',
-        marginRight: '20px',
-    },
-
-    logoText: {
-        height: '40px',
-        margin: '0px',
-        padding: '0px',
-        textAlign: 'center',
-        textJustify: 'center',
-        fontSize: '30px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    navbar: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '10px 20px',
-        backgroundColor: '#333',
-        color: 'white',
-        position: 'sticky',
-        top: 0,
-        zIndex: 1000,
-        borderRadius: '0px 0px 23px 23px',
-    },
-    logoContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        cursor: 'pointer',
-    },
-
-    navItems: {
-        display: 'flex',
-        alignItems: 'center',
-    },
-    // button: {
-    //     backgroundColor: '#007bff',
-    //     color: 'white',
-    //     border: 'none',
-    //     borderRadius: '5px',
-    //     padding: '8px 16px',
-    //     marginLeft: '10px',
-    //     cursor: 'pointer',
-    //     fontSize: '14px',
-    // },
-    avatarContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-    },
-    avatar: {
-        width: '40px',
-        height: '40px',
-        borderRadius: '50%',
-        backgroundColor: '#6c757d',
-        color: 'white',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '16px',
-        fontWeight: 'bold',
-        marginLeft: '10px',
-        cursor: 'pointer',
-    },
 }
 
 export default Navbar

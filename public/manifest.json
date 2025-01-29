@@ -21,5 +21,6 @@
     "start_url": ".",
     "background_color": "#333330",
     "display": "standalone",
-    "theme_color": "#333330"
+    "theme_color": "#333330",
+    "description": "PWA for events"
 }

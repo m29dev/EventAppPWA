@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css' // Leaflet CSS
 import 'leaflet-control-geocoder/dist/Control.Geocoder.js' // Geocoding library
 
 const SearchableMap = () => {
-    const [location, setLocation] = useState(null) // To store the geocoded location
+    const [location, setLocation] = useState(null)
 
     useEffect(() => {
         // Set up the map
         const map = L.map('map', {
-            center: [37.7749, -122.4194], // Default coordinates (San Francisco)
+            center: [37.7749, -122.4194],
             zoom: 13,
         })
 
